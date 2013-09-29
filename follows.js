@@ -439,6 +439,17 @@
 
         graph.render();
 
+        $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .legend').prop('id', 'legend-' + feedId + '-' + datastream.id);
+        var legend = new Rickshaw.Graph.Legend( {
+            graph: graph,
+            element: document.getElementById('legend-' + feedId + '-' + datastream.id)
+        });
+        
+        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+            graph: graph,
+            legend: legend
+        } );
+        
         var ticksTreatment = 'glow';
 
         // Define and Render X Axis (Time Values)
@@ -465,17 +476,6 @@
                 return content;
             }
         });
-
-        $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .legend').prop('id', 'legend-' + feedId + '-' + datastream.id);
-        var legend = new Rickshaw.Graph.Legend( {
-            graph: graph,
-            element: $('#legend-' + feedId + '-' + datastream.id)
-        });
-        
-        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-            graph: graph,
-            legend: legend
-        } );
         
         $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .slider').prop('id', 'slider-' + feedId + '-' + datastream.id);
         var slider = new Rickshaw.Graph.RangeSlider({
