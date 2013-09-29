@@ -17,7 +17,7 @@
 		applicationName	= '', // Replaces Xively logo in the header
 		dataDuration	= '90days', // Default duration of data to be displayed // ref: https://xively.com/dev/docs/api/data/read/historical_data/
 		dataInterval	= 0, // Default interval for data to be displayed (in seconds)
-		dataColor		= '', // CSS HEX value of color to represent data (omit leading #)
+		dataColor		= new Rickshaw.Color.Palette(), // CSS HEX value of color to represent data (omit leading #)
 		hideForm		= 0; // To hide input form use value of 1, otherwise set to 0
 
 // Function Declarations
@@ -125,9 +125,13 @@
 									series.push({
 										name: datastream.id,
 										data: points,
-										color: '#' + dataColor
+										color: dataColor.color()
 									});
-                                    multiSeries.push(series[0]);
+                                    if (datastream.id == "RHOutdoors" || datastream.id == "TemperatureCrawlSpace" || datastream.id == "AHOutdoors" || 
+                                        datastream.id == "RHOutdoorsInCrawlSpace" || datastream.id == "RHCrawlSpace" || datastream.id == "AHOutdoors" ||
+                                        datastream.id == "RHOutdoorsInCrawlSpace" || datastream.id == "AHCrawlSpace") {
+                                        multiSeries.push(series[0]);
+                                    }
 									// Initialize Graph DOM Element
 									$('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .graph').attr('id', 'graph-' + feedId + '-' + datastream.id);
 
@@ -176,13 +180,14 @@
 											return content;
 										}
 									});
-
+                                    
+                                    $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .legend').prop('id', 'legend-' + feedId + '-' + datastream.id);
+                                    
 									$('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .slider').prop('id', 'slider-' + feedId + '-' + datastream.id);
 									var slider = new Rickshaw.Graph.RangeSlider({
 	            	   					graph: graph,
 	        	       					element: $('#slider-' + feedId + '-' + datastream.id)
 	               					});
-                                    //to here
 								} else {
 									$('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .graphWrapper').addClass('hidden');
 								}
@@ -392,7 +397,7 @@
         // Build Graph       
         
         var min = Number.MAX_VALUE;
-        var max = Number.MIN_VALUE;
+        var max = -Number.MAX_VALUE;
         
         for (var i = 0; i < series.length; i++)
         {
@@ -401,13 +406,18 @@
                 if(data < min) {
                     min = data;
                 }            
-                
                 if (data > max)
                 {
                   max = data;
                 }
             }
         }
+        if (min == max) {
+        
+          min--;
+          max++;
+        }
+        
         $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .datastream-name').html("Combinded graph");
         $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .datastream-value').html("");
                                 
@@ -456,6 +466,17 @@
             }
         });
 
+        $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .legend').prop('id', 'legend-' + feedId + '-' + datastream.id);
+        var legend = new Rickshaw.Graph.Legend( {
+            graph: graph,
+            element: $('#legend-' + feedId + '-' + datastream.id)
+        });
+        
+        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+            graph: graph,
+            legend: legend
+        } );
+        
         $('#feed-' + feedId + ' .datastreams .datastream-' + datastream.id + ' .slider').prop('id', 'slider-' + feedId + '-' + datastream.id);
         var slider = new Rickshaw.Graph.RangeSlider({
             graph: graph,
