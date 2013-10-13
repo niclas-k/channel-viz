@@ -127,7 +127,7 @@
 										data: points,
 										color: dataColor.color()
 									});
-                                    if (datastream.id == "RHOutdoors" || datastream.id == "TemperatureCrawlSpace" || datastream.id == "AHOutdoors" || 
+                                    if (datastream.id == "RHOutdoors" || datastream.id == "TemperatureCrawlSpace" || datastream.id == "TemperatureOutdoors" || datastream.id == "AHOutdoors" || 
                                         datastream.id == "RHOutdoorsInCrawlSpace" || datastream.id == "RHCrawlSpace" || datastream.id == "AHOutdoors" ||
                                         datastream.id == "RHOutdoorsInCrawlSpace" || datastream.id == "AHCrawlSpace") {
                                         multiSeries.push(series[0]);
